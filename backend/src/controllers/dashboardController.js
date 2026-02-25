@@ -39,29 +39,17 @@ export const getDashboardStats = async (req, res, next) => {
     const partialDebts = debts.filter(d => d.status === 'partial').length;
     const paidDebts = debts.filter(d => d.status === 'paid').length;
 
-    // Recent products (last 5 added)
-    const recentProductsSnapshot = await db.collection('stores').doc(storeId)
-      .collection('products')
-      .orderBy('createdAt', 'desc')
-      .limit(5)
-      .get();
+    // Recent products (last 5 added) — sorted in JS to avoid index requirement
+    const recentProducts = productsSnapshot.docs
+      .map(doc => ({ id: doc.id, ...doc.data() }))
+      .sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0))
+      .slice(0, 5);
 
-    const recentProducts = recentProductsSnapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data(),
-    }));
-
-    // Recent debts (last 5)
-    const recentDebtsSnapshot = await db.collection('stores').doc(storeId)
-      .collection('debts')
-      .orderBy('createdAt', 'desc')
-      .limit(5)
-      .get();
-
-    const recentDebts = recentDebtsSnapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data(),
-    }));
+    // Recent debts (last 5) — sorted in JS to avoid index requirement
+    const recentDebts = debtsSnapshot.docs
+      .map(doc => ({ id: doc.id, ...doc.data() }))
+      .sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0))
+      .slice(0, 5);
 
     res.json({
       stats: {

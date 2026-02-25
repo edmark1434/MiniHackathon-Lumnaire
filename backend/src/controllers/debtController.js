@@ -28,7 +28,7 @@ export const getDebts = async (req, res, next) => {
       query = query.where('status', '==', debtStatus);
     }
 
-    const snapshot = await query.orderBy('createdAt', 'desc').get();
+    const snapshot = await query.get();
 
     const debts = snapshot.docs.map(doc => ({
       id: doc.id,

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, Outlet, useLocation } from "react-router";
+import { Link, Navigate, Outlet, useLocation } from "react-router";
 import { useAuth } from "~/context/AuthContext";
 import {
   HiOutlineHome,
@@ -21,13 +21,12 @@ const ownerNavItems = [
 
 const adminNavItems = [
   { path: "/admin/dashboard", label: "Dashboard", icon: HiOutlineHome },
-  { path: "/admin/users", label: "Users", icon: HiOutlineUserGroup },
 ];
 
 export default function AppLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
-  const { userProfile, store, logout } = useAuth();
+  const { firebaseUser, userProfile, store, logout, loading } = useAuth();
   const location = useLocation();
 
   const navItems = userProfile?.role === "admin" ? adminNavItems : ownerNavItems;
@@ -36,11 +35,55 @@ export default function AppLayout() {
     await logout();
   };
 
-  const roleBadgeColor = {
+  const roleBadgeColor: Record<string, string> = {
     admin: "bg-red-500/20 text-red-400 border-red-500/30",
     owner: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
     user: "bg-blue-500/20 text-blue-400 border-blue-500/30",
   };
+
+  // Loading state
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-950">
+        <div className="w-12 h-12 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
+
+  // Not logged in → redirect to login
+  if (!firebaseUser || !userProfile) {
+    return <Navigate to="/login" replace />;
+  }
+
+  // Regular users can't access owner/admin pages
+  if (userProfile.role === "user") {
+    return <Navigate to="/" replace />;
+  }
+
+  // Unapproved owners get a pending screen
+  if (userProfile.role === "owner" && !userProfile.approved) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-950">
+        <div className="bg-gray-900 border border-yellow-500/30 rounded-2xl p-8 max-w-md text-center">
+          <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-yellow-500/20 flex items-center justify-center">
+            <svg className="w-8 h-8 text-yellow-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <h2 className="text-xl font-bold text-white mb-2">Pending Approval</h2>
+          <p className="text-gray-400 mb-6">
+            Your store owner account is awaiting admin approval. You'll be able to access your dashboard once approved.
+          </p>
+          <button
+            onClick={handleLogout}
+            className="px-6 py-2.5 rounded-xl text-sm font-medium text-red-400 border border-red-500/30 hover:bg-red-500/10 transition-colors"
+          >
+            Sign Out
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-950 flex">

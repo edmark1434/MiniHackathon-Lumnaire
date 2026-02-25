@@ -28,7 +28,7 @@ export const getProducts = async (req, res, next) => {
       query = query.where('category', '==', category);
     }
 
-    const snapshot = await query.orderBy('name').get();
+    const snapshot = await query.get();
 
     let products = snapshot.docs.map(doc => ({
       id: doc.id,

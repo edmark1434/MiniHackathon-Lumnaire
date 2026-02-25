@@ -9,7 +9,6 @@ export const getPendingOwners = async (req, res, next) => {
     const snapshot = await db.collection('users')
       .where('role', '==', 'owner')
       .where('approved', '==', false)
-      .orderBy('createdAt', 'desc')
       .get();
 
     const pendingOwners = snapshot.docs.map(doc => ({
@@ -19,6 +18,7 @@ export const getPendingOwners = async (req, res, next) => {
 
     res.json({ pendingOwners });
   } catch (error) {
+    console.error('getPendingOwners error:', error);
     next(error);
   }
 };
@@ -78,9 +78,7 @@ export const rejectOwner = async (req, res, next) => {
  */
 export const getAllUsers = async (req, res, next) => {
   try {
-    const snapshot = await db.collection('users')
-      .orderBy('createdAt', 'desc')
-      .get();
+    const snapshot = await db.collection('users').get();
 
     const users = snapshot.docs.map(doc => ({
       uid: doc.id,
@@ -89,6 +87,7 @@ export const getAllUsers = async (req, res, next) => {
 
     res.json({ users });
   } catch (error) {
+    console.error('getAllUsers error:', error);
     next(error);
   }
 };
