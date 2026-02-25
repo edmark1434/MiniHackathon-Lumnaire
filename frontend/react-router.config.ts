@@ -1,7 +1,6 @@
 import type { Config } from "@react-router/dev/config";
 
 export default {
-  // Config options...
-  // Server-side render by default, to enable SPA mode set this to `false`
-  ssr: true,
+  // SPA mode — Firebase Auth doesn't work well with SSR
+  ssr: false,
 } satisfies Config;
