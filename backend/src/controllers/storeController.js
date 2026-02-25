@@ -7,9 +7,7 @@ import admin from 'firebase-admin';
  */
 export const getAllStores = async (req, res, next) => {
   try {
-    const snapshot = await db.collection('stores')
-      .orderBy('createdAt', 'desc')
-      .get();
+    const snapshot = await db.collection('stores').get();
 
     const stores = snapshot.docs.map(doc => ({
       id: doc.id,
@@ -18,6 +16,7 @@ export const getAllStores = async (req, res, next) => {
 
     res.json({ stores });
   } catch (error) {
+    console.error('getAllStores error:', error);
     next(error);
   }
 };

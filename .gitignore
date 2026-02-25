@@ -27,6 +27,11 @@ yarn-error.log*
 .env.test.local
 .env.production.local
 
+# Firebase
+serviceAccountKey.json
+adminsdk.json
+firebase-credentials.txt
+
 # Editor directories and files
 .idea/
 .vscode/

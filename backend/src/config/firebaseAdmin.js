@@ -13,8 +13,12 @@ const serviceAccountPath =
 if (existsSync(serviceAccountPath)) {
   const serviceAccount = JSON.parse(readFileSync(serviceAccountPath, "utf8"));
   credential = admin.credential.cert(serviceAccount);
+  console.log("✅ Firebase Admin: Using service account from", serviceAccountPath);
 } else {
-  // Use project ID only (for environments where ADC is available)
+  console.warn("⚠️  Firebase Admin: serviceAccountKey.json not found at", serviceAccountPath);
+  console.warn("   Falling back to Application Default Credentials.");
+  console.warn("   Download your service account key from:");
+  console.warn("   https://console.firebase.google.com/project/mini-hackathon-cf22c/settings/serviceaccounts/adminsdk");
   credential = admin.credential.applicationDefault();
 }
 
