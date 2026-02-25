@@ -46,7 +46,7 @@ export const getStore = async (req, res, next) => {
  */
 export const createStore = async (req, res, next) => {
   try {
-    const { storeName, address, description } = req.body;
+    const { storeName, address, description, latitude, longitude } = req.body;
 
     if (!storeName) {
       return res.status(400).json({ message: 'Store name is required' });
@@ -68,6 +68,8 @@ export const createStore = async (req, res, next) => {
       storeName,
       address: address || '',
       description: description || '',
+      latitude: latitude !== undefined ? parseFloat(latitude) : null,
+      longitude: longitude !== undefined ? parseFloat(longitude) : null,
       createdAt: admin.firestore.FieldValue.serverTimestamp(),
     };
 
@@ -105,12 +107,14 @@ export const updateStore = async (req, res, next) => {
       return res.status(403).json({ message: 'You can only update your own store' });
     }
 
-    const { storeName, address, description } = req.body;
+    const { storeName, address, description, latitude, longitude } = req.body;
     const updates = {};
 
     if (storeName !== undefined) updates.storeName = storeName;
     if (address !== undefined) updates.address = address;
     if (description !== undefined) updates.description = description;
+    if (latitude !== undefined) updates.latitude = parseFloat(latitude);
+    if (longitude !== undefined) updates.longitude = parseFloat(longitude);
     updates.updatedAt = admin.firestore.FieldValue.serverTimestamp();
 
     await storeRef.update(updates);

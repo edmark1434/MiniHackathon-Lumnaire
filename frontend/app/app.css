@@ -48,6 +48,36 @@ body {
   }
 }
 
+/* Leaflet Map Custom Styles */
+.store-tooltip {
+  background-color: rgba(16, 185, 129, 0.95) !important;
+  border: 2px solid white !important;
+  border-radius: 8px !important;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3) !important;
+  padding: 4px 10px !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  color: white !important;
+}
+
+.store-tooltip::before {
+  border-top-color: rgba(16, 185, 129, 0.95) !important;
+}
+
+.leaflet-popup-content-wrapper {
+  border-radius: 12px !important;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3) !important;
+}
+
+.leaflet-popup-tip {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2) !important;
+}
+
+.custom-marker-icon {
+  background: transparent !important;
+  border: none !important;
+}
+
 /* Line clamp utility */
 .line-clamp-2 {
   display: -webkit-box;

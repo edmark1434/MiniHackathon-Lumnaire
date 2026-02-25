@@ -38,6 +38,8 @@ export default function OwnerDashboard() {
   const [storeName, setStoreName] = useState("");
   const [storeAddress, setStoreAddress] = useState("");
   const [storeDesc, setStoreDesc] = useState("");
+  const [latitude, setLatitude] = useState("");
+  const [longitude, setLongitude] = useState("");
   const [creating, setCreating] = useState(false);
 
   useEffect(() => {
@@ -69,6 +71,8 @@ export default function OwnerDashboard() {
         storeName,
         address: storeAddress,
         description: storeDesc,
+        latitude: latitude || null,
+        longitude: longitude || null,
       });
       await refreshProfile();
       setShowStoreForm(false);
@@ -76,6 +80,22 @@ export default function OwnerDashboard() {
       alert(err.response?.data?.message || "Failed to create store");
     } finally {
       setCreating(false);
+    }
+  };
+
+  const getCurrentLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setLatitude(position.coords.latitude.toFixed(6));
+          setLongitude(position.coords.longitude.toFixed(6));
+        },
+        (error) => {
+          alert("Unable to get your location. Please enter manually.");
+        }
+      );
+    } else {
+      alert("Geolocation is not supported by your browser.");
     }
   };
 
@@ -125,6 +145,37 @@ export default function OwnerDashboard() {
               rows={3}
               className="w-full px-4 py-3 rounded-xl bg-gray-800 border border-gray-700 text-white placeholder-gray-500 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none transition-colors resize-none"
             />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-300 mb-2">Location Coordinates</label>
+            <button
+              type="button"
+              onClick={getCurrentLocation}
+              className="mb-3 w-full py-2 rounded-lg text-sm text-white bg-gray-700 hover:bg-gray-600 transition-colors"
+            >
+              📍 Use My Current Location
+            </button>
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <input
+                  type="text"
+                  value={latitude}
+                  onChange={(e) => setLatitude(e.target.value)}
+                  placeholder="Latitude (e.g., 14.5995)"
+                  className="w-full px-4 py-3 rounded-xl bg-gray-800 border border-gray-700 text-white placeholder-gray-500 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none transition-colors"
+                />
+              </div>
+              <div>
+                <input
+                  type="text"
+                  value={longitude}
+                  onChange={(e) => setLongitude(e.target.value)}
+                  placeholder="Longitude (e.g., 120.9842)"
+                  className="w-full px-4 py-3 rounded-xl bg-gray-800 border border-gray-700 text-white placeholder-gray-500 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none transition-colors"
+                />
+              </div>
+            </div>
+            <p className="text-xs text-gray-500 mt-2">Optional: Add coordinates to show your store on the map</p>
           </div>
           <button
             type="submit"

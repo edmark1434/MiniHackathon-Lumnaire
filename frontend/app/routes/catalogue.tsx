@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import api from "~/lib/api";
-import { HiOutlineSearch, HiOutlineLocationMarker, HiOutlineShoppingBag } from "react-icons/hi";
+import { HiOutlineSearch, HiOutlineLocationMarker, HiOutlineShoppingBag, HiOutlineViewGrid, HiOutlineMap } from "react-icons/hi";
+import StoresMap from "~/components/StoresMap";
 
 interface Store {
   id: string;
@@ -9,12 +10,16 @@ interface Store {
   ownerName: string;
   address: string;
   description: string;
+  latitude?: number;
+  longitude?: number;
 }
 
 export default function Catalogue() {
+  const navigate = useNavigate();
   const [stores, setStores] = useState<Store[]>([]);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
+  const [viewMode, setViewMode] = useState<"grid" | "map">("grid");
 
   useEffect(() => {
     fetchStores();
@@ -46,8 +51,8 @@ export default function Catalogue() {
         <p className="text-gray-400 mt-2">Browse sari-sari stores and find what you need</p>
       </div>
 
-      {/* Search */}
-      <div className="max-w-xl mx-auto mb-10">
+      {/* Search & View Toggle */}
+      <div className="max-w-4xl mx-auto mb-10 space-y-4">
         <div className="relative">
           <HiOutlineSearch className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
           <input
@@ -58,9 +63,35 @@ export default function Catalogue() {
             className="w-full pl-12 pr-4 py-3.5 rounded-2xl bg-gray-900 border border-gray-800 text-white placeholder-gray-500 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none transition-colors"
           />
         </div>
+        
+        {/* View Mode Toggle */}
+        <div className="flex gap-2 justify-center">
+          <button
+            onClick={() => setViewMode("grid")}
+            className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${
+              viewMode === "grid"
+                ? "bg-emerald-600 text-white"
+                : "bg-gray-800 text-gray-400 hover:bg-gray-700"
+            }`}
+          >
+            <HiOutlineViewGrid className="w-5 h-5" />
+            <span>Grid View</span>
+          </button>
+          <button
+            onClick={() => setViewMode("map")}
+            className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${
+              viewMode === "map"
+                ? "bg-emerald-600 text-white"
+                : "bg-gray-800 text-gray-400 hover:bg-gray-700"
+            }`}
+          >
+            <HiOutlineMap className="w-5 h-5" />
+            <span>Map View</span>
+          </button>
+        </div>
       </div>
 
-      {/* Store Grid */}
+      {/* Store Grid or Map */}
       {loading ? (
         <div className="flex justify-center py-20">
           <div className="w-10 h-10 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin" />
@@ -72,6 +103,23 @@ export default function Catalogue() {
           <p className="text-gray-500 text-sm mt-1">
             {search ? "Try a different search term." : "No stores have been registered yet."}
           </p>
+        </div>
+      ) : viewMode === "map" ? (
+        <div className="mb-8">
+          <StoresMap
+            stores={filteredStores}
+            onMarkerClick={(storeId: string) => navigate(`/store/${storeId}`)}
+          />
+          <div className="flex items-center justify-center gap-6 text-sm text-gray-400 mt-4">
+            <div className="flex items-center gap-2">
+              <div className="w-4 h-4 bg-emerald-500 rounded-full border-2 border-white shadow"></div>
+              <span>{filteredStores.filter(s => s.latitude && s.longitude).length} registered stores</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 bg-gray-500 rounded-full border-2 border-white shadow"></div>
+              <span>Nearby stores (within 5km)</span>
+            </div>
+          </div>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -104,6 +152,12 @@ export default function Catalogue() {
                 <p className="mt-3 text-sm text-gray-500 line-clamp-2">{store.description}</p>
               )}
 
+              {store.latitude && store.longitude && (
+                <div className="mt-2 text-xs text-emerald-400">
+                  📍 Location available on map
+                </div>
+              )}
+
               <div className="mt-4 text-sm text-emerald-400 font-medium group-hover:underline">
                 View Products →
               </div>
@@ -114,3 +168,4 @@ export default function Catalogue() {
     </div>
   );
 }
+

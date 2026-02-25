@@ -1,6 +1,7 @@
 import { Link, Outlet, useLocation } from "react-router";
 import { useAuth } from "~/context/AuthContext";
-import { HiOutlineShoppingBag, HiOutlineSearch } from "react-icons/hi";
+import { HiOutlineShoppingBag, HiOutlineSun } from "react-icons/hi";
+import { FaUserAstronaut } from "react-icons/fa";
 
 export default function PublicLayout() {
   const { firebaseUser, userProfile } = useAuth();
@@ -13,11 +14,10 @@ export default function PublicLayout() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
-            <Link to="/" className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center">
-                <HiOutlineShoppingBag className="w-5 h-5 text-white" />
-              </div>
-              <span className="text-lg font-bold text-white">SariTrack</span>
+            <Link to="/" className="flex items-center gap-2">
+              <span className="text-2xl font-bold bg-gradient-to-br from-emerald-500 to-teal-600 bg-clip-text text-transparent">
+  BentaBoss
+</span>
             </Link>
 
             {/* Nav links */}
@@ -85,9 +85,9 @@ export default function PublicLayout() {
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-2 text-gray-500 text-sm">
               <HiOutlineShoppingBag className="w-4 h-4" />
-              <span>SariTrack — Inventory Management for Sari-Sari Stores</span>
+              <span>BentaBoss — Inventory Management for Sari-Sari Stores</span>
             </div>
-            <p className="text-gray-600 text-xs">© 2026 SariTrack. All rights reserved.</p>
+            <p className="text-gray-600 text-xs">© 2026 BentaBoss. All rights reserved.</p>
           </div>
         </div>
       </footer>
