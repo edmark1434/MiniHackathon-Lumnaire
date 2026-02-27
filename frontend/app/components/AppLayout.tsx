@@ -109,7 +109,7 @@ export default function AppLayout() {
                 <HiOutlineShoppingBag className="w-6 h-6 text-white" />
               </div>
               <div>
-                <h1 className="text-lg font-bold text-white">SariTrack</h1>
+                <h1 className="text-lg font-bold text-white">BentaBoss</h1>
                 <p className="text-xs text-gray-500">Inventory System</p>
               </div>
             </Link>

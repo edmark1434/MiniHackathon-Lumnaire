@@ -140,7 +140,7 @@ export default function Home() {
           </h2>
 
           <p className="text-gray-400 mb-8 max-w-xl mx-auto">
-            Join SariTrack today and start managing your inventory, tracking
+            Join BentaBoss today and start managing your inventory, tracking
             debts, and connecting with your community.
           </p>
 

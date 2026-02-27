@@ -36,7 +36,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>SariTrack — Sari-Sari Store Inventory</title>
+        <title>BentaBoss — Sari-Sari Store Inventory</title>
         <meta
           name="description"
           content="Manage your sari-sari store inventory, track debts, and let your community browse products online."

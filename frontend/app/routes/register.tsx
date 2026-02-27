@@ -70,7 +70,7 @@ export default function Register() {
             <HiOutlineShoppingBag className="w-7 h-7 text-white" />
           </div>
           <h1 className="text-2xl font-bold text-white">Create an account</h1>
-          <p className="text-gray-400 mt-1">Join SariTrack today</p>
+          <p className="text-gray-400 mt-1">Join BentaBoss today</p>
         </div>
 
         {/* Form */}
